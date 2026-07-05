@@ -17,15 +17,27 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar">
-      <header class="sidebar__header">
-        <p class="sidebar__kicker">Carte de tournée</p>
-        <h1 id="tour-title">Tournée</h1>
-        <p class="sidebar__subtitle" id="tour-subtitle"></p>
-        <p class="sidebar__meta" id="tour-meta"></p>
-      </header>
+    <aside class="sidebar" id="sidebar-panel">
+      <div class="sidebar__content">
+        <header class="sidebar__header">
+          <p class="sidebar__kicker">Carte de tournée</p>
+          <h1 id="tour-title">Tournée</h1>
+          <p class="sidebar__subtitle" id="tour-subtitle"></p>
+          <p class="sidebar__meta" id="tour-meta"></p>
+        </header>
 
-      <div class="timeline" id="timeline" aria-label="Étapes de la tournée"></div>
+        <div class="timeline" id="timeline" aria-label="Étapes de la tournée"></div>
+      </div>
+      <button
+        type="button"
+        class="shutter-btn shutter-btn--down"
+        id="sidebar-shutter"
+        aria-label="Replier les étapes"
+        aria-expanded="true"
+        aria-controls="sidebar-panel"
+      >
+        <span class="shutter-btn__grip" aria-hidden="true"></span>
+      </button>
     </aside>
 
     <main class="main">
@@ -33,6 +45,17 @@
       <div id="map-status" class="toast" aria-live="polite">Chargement…</div>
 
       <section class="detail" id="detail-panel" aria-label="Détail de l'étape">
+        <button
+          type="button"
+          class="shutter-btn shutter-btn--up"
+          id="detail-shutter"
+          aria-label="Replier le détail"
+          aria-expanded="true"
+          aria-controls="detail-panel"
+          hidden
+        >
+          <span class="shutter-btn__grip" aria-hidden="true"></span>
+        </button>
         <button type="button" class="detail__close" id="detail-close" aria-label="Fermer le détail">×</button>
         <div class="detail__inner" id="detail-content"></div>
       </section>

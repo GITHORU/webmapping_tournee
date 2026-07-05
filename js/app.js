@@ -3,6 +3,7 @@ import { geocodeCities, geocodeLieux, parseCoords } from "./geocode.js";
 const YAML_PATH = "tournee.yaml";
 const DEPARTMENTS_PATH = "data/departements.geojson";
 const DEPT_MAX_ZOOM = 8;
+const FOCUS_PAN_DURATION = 0.85;
 
 let map;
 let layerGroup;
@@ -23,9 +24,17 @@ const statusEl = document.getElementById("map-status");
 const detailPanel = document.getElementById("detail-panel");
 const detailContent = document.getElementById("detail-content");
 const detailClose = document.getElementById("detail-close");
+const sidebarPanel = document.getElementById("sidebar-panel");
+const sidebarShutter = document.getElementById("sidebar-shutter");
+const detailShutter = document.getElementById("detail-shutter");
+
+const MOBILE_MQ = window.matchMedia("(max-width: 960px)");
 
 init();
 detailClose.addEventListener("click", () => closeDetail());
+sidebarShutter.addEventListener("click", () => toggleSidebarCollapsed());
+detailShutter.addEventListener("click", () => toggleDetailCollapsed());
+MOBILE_MQ.addEventListener("change", syncMobilePanels);
 
 function init() {
   map = L.map("map", {
@@ -44,6 +53,7 @@ function init() {
   layerGroup = L.layerGroup().addTo(map);
   placesLayer = L.layerGroup().addTo(map);
   loadDepartmentsLayer();
+  syncMobilePanels();
   loadTour();
 }
 
@@ -296,6 +306,8 @@ async function focusStop(stopId) {
 
   renderDetail(stop);
   detailPanel.classList.add("is-open");
+  detailPanel.classList.remove("is-collapsed");
+  syncDetailShutter();
 
   const pendingLieux = stop.details.lieux.some((place) => !place.coords);
   if (pendingLieux) {
@@ -313,6 +325,8 @@ async function focusStop(stopId) {
   if (item) {
     item.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
+
+  centerMapOn(stop.coords);
 }
 
 function renderDetail(stop) {
@@ -371,9 +385,11 @@ function renderLieuxSection(lieux, stopId) {
   `).join("");
 
   return `
-    <div class="detail__section">
+    <div class="detail__section detail__section--lieux">
       <h3>Lieux caractéristiques</h3>
-      <div class="lieux-list">${items}</div>
+      <div class="lieux-slider">
+        <div class="lieux-list">${items}</div>
+      </div>
     </div>
   `;
 }
@@ -413,6 +429,7 @@ function createPlaceMarker(place, stopId) {
   });
   marker.on("click", () => {
     highlightPlace(place.id);
+    centerMapOn(place.coords);
     marker.openPopup();
   });
   marker.placeId = place.id;
@@ -436,8 +453,12 @@ function openPlaceLegend(placeId, stopId) {
   const entry = placeMarkers.find((p) => p.id === placeId && p.stopId === stopId);
   if (!entry) return;
 
+  const stop = stops.find((s) => s.id === stopId);
+  const place = stop?.details.lieux.find((p) => p.id === placeId);
+
   highlightPlace(placeId);
-  entry.marker.openPopup();
+  centerMapOn(place?.coords ?? entry.marker.getLatLng());
+  entry.marker.closePopup();
 }
 
 function highlightPlace(placeId) {
@@ -564,7 +585,8 @@ function renderContactsSection(contacts) {
 }
 
 function closeDetail() {
-  detailPanel.classList.remove("is-open");
+  detailPanel.classList.remove("is-open", "is-collapsed");
+  syncDetailShutter();
   activeStopId = null;
   clearPlaces();
   timelineItems.forEach(({ el }) => el.classList.remove("is-active"));
@@ -572,6 +594,113 @@ function closeDetail() {
     const el = marker.getElement();
     if (el) el.classList.remove("is-active");
   });
+}
+
+function isMobileLayout() {
+  return MOBILE_MQ.matches;
+}
+
+function syncMobilePanels() {
+  if (!isMobileLayout()) {
+    sidebarPanel.classList.remove("is-collapsed");
+    detailPanel.classList.remove("is-collapsed");
+    setShutterState(sidebarShutter, false);
+    setShutterState(detailShutter, false);
+    syncDetailShutter();
+    return;
+  }
+
+  syncDetailShutter();
+}
+
+function toggleSidebarCollapsed() {
+  if (!isMobileLayout()) return;
+
+  const collapsed = sidebarPanel.classList.toggle("is-collapsed");
+  setShutterState(sidebarShutter, collapsed);
+  refreshMapLayout();
+}
+
+function toggleDetailCollapsed() {
+  if (!isMobileLayout() || !detailPanel.classList.contains("is-open")) return;
+
+  const collapsed = detailPanel.classList.toggle("is-collapsed");
+  setShutterState(detailShutter, collapsed);
+  refreshMapLayout();
+}
+
+function setShutterState(button, collapsed) {
+  const expanded = !collapsed;
+  button.setAttribute("aria-expanded", String(expanded));
+  button.classList.toggle("is-collapsed", collapsed);
+
+  if (button === sidebarShutter) {
+    button.setAttribute("aria-label", expanded ? "Replier les étapes" : "Déplier les étapes");
+  } else {
+    button.setAttribute("aria-label", expanded ? "Replier le détail" : "Déplier le détail");
+  }
+}
+
+function syncDetailShutter() {
+  const detailOpen = detailPanel.classList.contains("is-open");
+  detailShutter.hidden = !isMobileLayout() || !detailOpen;
+
+  if (!detailOpen) {
+    detailPanel.classList.remove("is-collapsed");
+    setShutterState(detailShutter, false);
+  }
+}
+
+function refreshMapLayout() {
+  if (!map) return;
+  window.requestAnimationFrame(() => {
+    map.invalidateSize();
+  });
+}
+
+function centerMapOn(coords) {
+  if (!map || !coords) return;
+
+  const latlng = Array.isArray(coords) ? L.latLng(coords[0], coords[1]) : L.latLng(coords);
+  if (!Number.isFinite(latlng.lat) || !Number.isFinite(latlng.lng)) return;
+
+  const zoom = map.getZoom();
+  const mapSize = map.getSize();
+  const { paddingTopLeft, paddingBottomRight } = getMapFocusPadding();
+  const visibleCenter = L.point(
+    (paddingTopLeft.x + mapSize.x - paddingBottomRight.x) / 2,
+    (paddingTopLeft.y + mapSize.y - paddingBottomRight.y) / 2,
+  );
+  const offset = mapSize.divideBy(2).subtract(visibleCenter);
+  const targetCenter = map.unproject(map.project(latlng, zoom).subtract(offset), zoom);
+
+  map.flyTo(targetCenter, zoom, {
+    duration: FOCUS_PAN_DURATION,
+    easeLinearity: 0.22,
+  });
+}
+
+function getMapFocusPadding() {
+  if (!isMobileLayout()) {
+    return {
+      paddingTopLeft: L.point(24, 24),
+      paddingBottomRight: L.point(404, 24),
+    };
+  }
+
+  const topInset = sidebarPanel.classList.contains("is-collapsed")
+    ? 48
+    : Math.min(window.innerHeight * 0.34, 280);
+  const detailOpen = detailPanel.classList.contains("is-open")
+    && !detailPanel.classList.contains("is-collapsed");
+  const bottomInset = detailOpen
+    ? Math.min(window.innerHeight * 0.42, 320)
+    : 48;
+
+  return {
+    paddingTopLeft: L.point(16, topInset + 12),
+    paddingBottomRight: L.point(16, bottomInset + 12),
+  };
 }
 
 function formatPinDates(dates) {
