@@ -93,6 +93,12 @@ steps:
           legend: "Lieux de rencontre et de logement"
           coords : [48.5937731,-1.8432106]
 
+        - name: "Plage de la Hoguette"
+          icon:
+            image: "assets/svg/sport/sport_sailing.svg"
+            color: "#FFD000"
+          legend: "Lieux de conférence pour le jour du 18 juillet"
+
         
       agenda: []
       notes: []
