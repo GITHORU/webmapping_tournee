@@ -1,0 +1,16 @@
+# Outils de génération du catalogue logos (hors app web)
+scripts/
+assets/catalogue-logos.pdf
+
+# OS / éditeur
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Python (au cas où)
+__pycache__/
+*.pyc
+.venv/
+venv/

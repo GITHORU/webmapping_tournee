@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tournée Été 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <header class="sidebar__header">
+        <p class="sidebar__kicker">Carte de tournée</p>
+        <h1 id="tour-title">Tournée</h1>
+        <p class="sidebar__subtitle" id="tour-subtitle"></p>
+        <p class="sidebar__meta" id="tour-meta"></p>
+      </header>
+
+      <div class="timeline" id="timeline" aria-label="Étapes de la tournée"></div>
+    </aside>
+
+    <main class="main">
+      <div id="map" role="application" aria-label="Carte de France"></div>
+      <div id="map-status" class="toast" aria-live="polite">Chargement…</div>
+
+      <section class="detail" id="detail-panel" aria-label="Détail de l'étape">
+        <button type="button" class="detail__close" id="detail-close" aria-label="Fermer le détail">×</button>
+        <div class="detail__inner" id="detail-content"></div>
+      </section>
+    </main>
+  </div>
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>

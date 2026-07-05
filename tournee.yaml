@@ -1,0 +1,269 @@
+# ─────────────────────────────────────────────────────────────
+# Tournée été 2026 — schéma de données
+#
+# Les coordonnées sont géocodées automatiquement à partir du nom
+# de ville. Si `address` est renseignée, elle est utilisée à la place.
+# Si `coords` est renseigné, il est prioritaire (pas de géocodage).
+#
+#   - id: 1
+#     city: "Caen"
+#     coords: [49.1829, -0.3707]     # [lat, lon] — prioritaire
+#     address: "Esplanade Jean-Moulin, 14050 Caen"  # optionnel
+#
+#   lieux:
+#     - name: "Nom du lieu"
+#       coords: [48.6493, -2.0257]   # [lat, lon] — prioritaire
+#       address: "Adresse complète"  # sinon utilisée pour le géocodage
+#       query: "Nom pour géocodage"  # secours si pas d'adresse
+#       icon:
+#         emoji: "🏛️"
+#         # ou image: "assets/svg/.../icon.svg"
+#         #   color: "#16A34A"        # teinte le SVG (noir par défaut)
+#         # ou color: "#1D4ED8"      # pastille colorée (sans image)
+#         #   symbol: "M"
+#       legend: "Texte affiché au clic sur la carte"
+# ─────────────────────────────────────────────────────────────
+
+meta:
+  title: "TOURNÉE ÉTÉ 2026"
+  subtitle: "Itinéraire complet"
+  period: "15 juillet — 13 août 2026"
+
+theme:
+  accent: "#B91C1C"
+  route: "#B91C1C"
+  background: "#FAF7F2"
+  panel: "#FFFFFF"
+
+steps:
+  # Paris (départ possible — décommenter si besoin)
+  # - id: 0
+  #   city: "Paris"
+  #   dates: "15 juillet"
+  #   days: 1
+  #   color: "#EA580C"
+  #   phase: "Départ"
+  #   details:
+  #     title: ""
+  #     summary: ""
+  #     agenda: []
+  #     notes: []
+  #     links: []
+  #     contacts: []
+
+  - id: 1
+    city: "Caen"
+    dates: "15-16 juillet"
+    days: 2
+    color: "#EA580C"
+    details:
+      title: "Caen"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 2
+    city: "Saint-Malo"
+    dates: "17-19 juillet"
+    days: 3
+    color: "#EA580C"
+    details:
+      title: "Saint-Malo"
+      summary: ""
+      lieux:
+        - name: "Espace Bouvier"
+          icon:
+            image: "assets/svg/landmark/tourism=museum.svg"
+            color: "#FFD000"
+          legend: "Lieux de conférence pour le jour du 18 juillet"
+          address: "6 Pl. Bouvet, 35400 Saint-Malo"
+
+        - name: "Gare de Saint-Malo"
+          icon:
+            image: "assets/svg/transport/transport_train_station.svg"
+            color: "#FFD000"
+          legend: "Gare principale de la ville"
+
+        - name: "Camp"
+          icon:
+            image: "assets/svg/accommodation/accommodation_camping.svg"
+            color: "#FFD000"
+          legend: "Lieux de rencontre et de logement"
+          coords : [48.5937731,-1.8432106]
+
+        
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 3
+    city: "Saint-Brieuc"
+    dates: "20-21 juillet"
+    days: 2
+    color: "#EA580C"
+    phase: "Bretagne & Vendée"
+    details:
+      title: "Saint-Brieuc"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 4
+    city: "Vannes"
+    dates: "22-23 juillet"
+    days: 2
+    color: "#EA580C"
+    phase: "Bretagne & Vendée"
+    details:
+      title: "Vannes"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 5
+    city: "La Roche-sur-Yon"
+    dates: "24-25 juillet"
+    days: 2
+    color: "#EA580C"
+    phase: "Bretagne & Vendée"
+    details:
+      title: "La Roche-sur-Yon"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 6
+    city: "Paris"
+    dates: "26-27 juillet"
+    days: 2
+    color: "#EA580C"
+    phase: "Bretagne & Vendée"
+    details:
+      title: "Paris"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 7
+    city: "Bordeaux"
+    dates: "28-29 juillet"
+    days: 2
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Bordeaux"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 8
+    city: "Mont-de-Marsan"
+    dates: "30-31 juillet"
+    days: 2
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Mont-de-Marsan"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 9
+    city: "Montauban"
+    dates: "1-2 août"
+    days: 2
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Montauban"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 10
+    city: "Albi"
+    dates: "3-4 août"
+    days: 2
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Albi"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 11
+    city: "Foix"
+    dates: "5-8 août"
+    days: 4
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Foix"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 12
+    city: "Perpignan"
+    dates: "9-10 août"
+    days: 2
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Perpignan"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 13
+    city: "Montpellier"
+    dates: "11-12 août"
+    days: 2
+    color: "#16A34A"
+    phase: "Sud-Ouest & Méditerranée"
+    details:
+      title: "Montpellier"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
+
+  - id: 14
+    city: "Marseille"
+    dates: "13 août"
+    days: 1
+    color: "#B91C1C"
+    type: arrival
+    phase: "Arrivée"
+    details:
+      title: "Marseille — arrivée"
+      summary: ""
+      agenda: []
+      notes: []
+      links: []
+      contacts: []
